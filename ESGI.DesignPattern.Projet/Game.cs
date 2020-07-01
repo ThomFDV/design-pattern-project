@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.Serialization;
 
 namespace ESGI.DesignPattern.Projet
 {
@@ -80,6 +79,129 @@ namespace ESGI.DesignPattern.Projet
                 }
             }
             return score;
+        }
+    }
+    
+    public interface Game
+    { 
+        public String GetScore();
+
+        public void WonPoint(int position);
+    }
+
+    public class Tennis : Game
+    {
+        private readonly List<Player> players;
+
+        public Tennis(Player player1, Player player2)
+        {
+            players = new List<Player>{player1, player2};
+        }
+
+        public void WonPoint(int position)
+        {
+            players[position].WonPoint();
+        }
+        
+        public string GetScore()
+        {
+            string score  = "";
+
+            if (players[0].score == players[1].score)
+            {
+                score = ScoreForEquality();
+            }
+            else if (players[0].score >= 4 || players[1].score >= 4)
+            {
+                score = ScoreOverFour();
+            }
+            else
+            {
+                score = ScoreUnderFour();
+            }
+            return score;
+        }
+        
+        private string ScoreForEquality()
+        {
+            switch (players[0].score)
+            {
+                case 0:
+                    return "Love-All";
+
+                case 1:
+                    return "Fifteen-All";
+
+                case 2:
+                    return "Thirty-All";
+
+                default:
+                    return "Deuce";
+            }
+        }
+        
+        private string ScoreOverFour()
+        {
+            var minusResult = players[0].score - players[1].score;
+        
+            if (minusResult == 1) 
+                return "Advantage player1";
+            if (minusResult == -1)
+                return "Advantage player2";
+            if (minusResult >= 2)
+                return "Win for player1";
+
+            return  "Win for player2";
+        }
+        
+        private string ScoreUnderFour()
+        {
+            var tempScore = 0;
+            var score = "";
+        
+            for (var i = 1; i < 3; i++)
+            {
+                if (i == 1) {
+                    tempScore = players[0].score;
+                }
+                else { 
+                    score += "-"; tempScore = players[1].score; 
+                }
+            
+                switch (tempScore)
+                {
+                    case 0:
+                        score += "Love";
+                        break;
+                    case 1:
+                        score += "Fifteen";
+                        break;
+                    case 2:
+                        score += "Thirty";
+                        break;
+                    case 3:
+                        score += "Forty";
+                        break;
+                }
+            }
+            return score;
+        }
+    }
+
+
+    public class Player
+    {
+        private String name;
+        public int score { get; private set; } = 0;
+
+        public Player(String name)
+        {
+            this.name = name;
+        }
+
+        public void WonPoint()
+        {
+            score += 1;
         }
     }
 }
