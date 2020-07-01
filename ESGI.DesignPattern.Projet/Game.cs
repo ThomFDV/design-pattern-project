@@ -105,21 +105,22 @@ namespace ESGI.DesignPattern.Projet
         
         public string GetScore()
         {
-            string score  = "";
-
             if (players[0].score == players[1].score)
             {
-                score = ScoreForEquality();
+                //score = ScoreForEquality();
+                return new ScoreForEqualityStrategy().GetScore(players);
+                
             }
             else if (players[0].score >= 4 || players[1].score >= 4)
             {
-                score = ScoreOverFour();
+                //score = ScoreOverFour();
+                return new ScoreOverFour().GetScore(players);
             }
             else
             {
-                score = ScoreUnderFour();
+                //score = ScoreUnderFour();
+                return new ScoreUnderFour().GetScore(players);
             }
-            return score;
         }
         
         private string ScoreForEquality()
@@ -155,6 +156,85 @@ namespace ESGI.DesignPattern.Projet
         }
         
         private string ScoreUnderFour()
+        {
+            var tempScore = 0;
+            var score = "";
+        
+            for (var i = 1; i < 3; i++)
+            {
+                if (i == 1) {
+                    tempScore = players[0].score;
+                }
+                else { 
+                    score += "-"; tempScore = players[1].score; 
+                }
+            
+                switch (tempScore)
+                {
+                    case 0:
+                        score += "Love";
+                        break;
+                    case 1:
+                        score += "Fifteen";
+                        break;
+                    case 2:
+                        score += "Thirty";
+                        break;
+                    case 3:
+                        score += "Forty";
+                        break;
+                }
+            }
+            return score;
+        }
+    }
+
+    public abstract class ScoreStrategy
+    {
+        public abstract string GetScore(List<Player> players);
+    }
+
+    public class ScoreForEqualityStrategy : ScoreStrategy
+    {
+        public override string GetScore(List<Player> players)
+        {
+            switch (players[0].score)
+            {
+                case 0:
+                    return "Love-All";
+
+                case 1:
+                    return "Fifteen-All";
+
+                case 2:
+                    return "Thirty-All";
+
+                default:
+                    return "Deuce";
+            }
+        }
+    }
+
+    public class ScoreOverFour : ScoreStrategy
+    {
+        public override string GetScore(List<Player> players)
+        {
+            var minusResult = players[0].score - players[1].score;
+        
+            if (minusResult == 1) 
+                return "Advantage player1";
+            if (minusResult == -1)
+                return "Advantage player2";
+            if (minusResult >= 2)
+                return "Win for player1";
+
+            return  "Win for player2";
+        }
+    }
+
+    public class ScoreUnderFour : ScoreStrategy
+    {
+        public override string GetScore(List<Player> players)
         {
             var tempScore = 0;
             var score = "";
