@@ -82,14 +82,14 @@ namespace ESGI.DesignPattern.Projet
         }
     }
     
-    public interface Game
+    public interface IGame
     { 
         public String GetScore();
 
         public void WonPoint(int position);
     }
 
-    public class Tennis : Game
+    public class Tennis : IGame
     {
         private readonly List<Player> players;
 
@@ -185,23 +185,6 @@ namespace ESGI.DesignPattern.Projet
                 }
             }
             return score;
-        }
-    }
-
-
-    public class Player
-    {
-        private String name;
-        public int score { get; private set; } = 0;
-
-        public Player(String name)
-        {
-            this.name = name;
-        }
-
-        public void WonPoint()
-        {
-            score += 1;
         }
     }
 }
