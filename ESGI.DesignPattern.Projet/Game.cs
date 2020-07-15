@@ -105,7 +105,7 @@ namespace ESGI.DesignPattern.Projet
         
         public string GetScore()
         {
-            string score  = "";
+            string score  = "";
 
             if (players[0].score == players[1].score)
             {
@@ -117,7 +117,7 @@ namespace ESGI.DesignPattern.Projet
             }
             else
             {
-                score = ScoreUnderFour();
+                score = ScoreUnderFour(players[0]) + "-" + ScoreUnderFour(players[1]);
             }
             return score;
         }
@@ -143,7 +143,7 @@ namespace ESGI.DesignPattern.Projet
         private string ScoreOverFour()
         {
             var minusResult = players[0].score - players[1].score;
-        
+        
             if (minusResult == 1) 
                 return "Advantage player1";
             if (minusResult == -1)
@@ -151,40 +151,25 @@ namespace ESGI.DesignPattern.Projet
             if (minusResult >= 2)
                 return "Win for player1";
 
-            return  "Win for player2";
+            return  "Win for player2";
         }
         
-        private string ScoreUnderFour()
+        private string ScoreUnderFour(Player player)
         {
-            var tempScore = 0;
-            var score = "";
-        
-            for (var i = 1; i < 3; i++)
+            var tempScore = player.score;
+            
+            switch (tempScore)
             {
-                if (i == 1) {
-                    tempScore = players[0].score;
-                }
-                else { 
-                    score += "-"; tempScore = players[1].score; 
-                }
-            
-                switch (tempScore)
-                {
-                    case 0:
-                        score += "Love";
-                        break;
-                    case 1:
-                        score += "Fifteen";
-                        break;
-                    case 2:
-                        score += "Thirty";
-                        break;
-                    case 3:
-                        score += "Forty";
-                        break;
-                }
+                case 0:
+                    return "Love";
+                case 1:
+                    return "Fifteen";
+                case 2:
+                    return "Thirty";
+                case 3:
+                    return "Forty";
             }
-            return score;
+            return "Unknown";
         }
     }
 }
